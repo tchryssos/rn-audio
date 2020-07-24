@@ -6,35 +6,35 @@
 
 const angel = {
 	id: '1',
-	// audio: AngelMp3,
+	audio: 'angel.mp3',
 	title: 'Cruel Angel\'s Thesis',
 	artist: 'Neon Genesis Evangelion',
 }
 
 const fZero = {
 	id: '2',
-	// audio: FZeroMp3,
+	audio: 'fzero.mp3',
 	title: 'Big Blue',
 	artist: 'F-Zero',
 }
 
 const kiss = 	{
 	id: '3',
-	// audio: KissMp3,
+	audio: 'kiss.mp3',
 	title: 'Kiss of Death',
 	artist: 'Darling in the Franxx',
 }
 
 const undertale = 	{
 	id: '4',
-	// audio: UndertaleMp3,
+	audio: 'undertale.mp3',
 	title: 'Megalovania',
 	artist: 'Toby Fox',
 }
 
 const wii = {
 	id: '5',
-	// audio: WiiMp3,
+	audio: 'wii.mp3',
 	title: 'Wii Shop Channel',
 	artist: 'Iwata',
 }

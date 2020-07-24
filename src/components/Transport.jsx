@@ -24,7 +24,7 @@ const Transport = () => {
 	useEffect(() => {
 		audioPlayerRef.current?.destroy()
 		if (currTrack) {
-			audioPlayerRef.current = new Player('wii.mp3')
+			audioPlayerRef.current = new Player(currTrack.audio)
 			audioPlayerRef.current.play()
 		}
 		return () => audioPlayerRef.current?.destroy()
