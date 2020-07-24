@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Slider, Icon, Text } from 'react-native-elements'
+import { Slider, Icon, Text, Button } from 'react-native-elements'
 import { Player } from '@react-native-community/audio-toolkit'
+import prop from 'ramda/src/prop'
+import path from 'ramda/src/path'
 
 import AudioContext from 'logic/contexts/audio'
 import { store } from 'constants/data'
@@ -23,7 +25,7 @@ const styles = StyleSheet.create({
 })
 
 const Transport = () => {
-	const { currentlyPlaying } = useContext(AudioContext)
+	const { currentlyPlaying, setCurrentlyPlaying } = useContext(AudioContext)
 	const currTrack = store[currentlyPlaying]
 	const audioPlayerRef = useRef()
 
@@ -32,24 +34,22 @@ const Transport = () => {
 		if (currTrack) {
 			audioPlayerRef.current = new Player(currTrack.audio, {
 				continuesToPlayInBackground: true,
-				mixWithOthers: true,
 			})
 			audioPlayerRef.current.play()
 		}
 		return () => audioPlayerRef.current?.destroy()
 	}, [currTrack])
 
-	if (currTrack) {
-		const { title, artist } = currTrack
-		return (
-			<View style={styles.player}>
-				<Text h4>{title}</Text>
-				<Text>{artist}</Text>
-				{/* <Text>{secondsToTime(Math.floor(duration / 1000))}</Text> */}
-			</View>
-		)
-	}
-	return null
+	return (
+		<View style={styles.player}>
+			<Text h4>{prop('title', currTrack)}</Text>
+			<Text>{prop('artist', currTrack)}</Text>
+			<Button
+				onPress={() => setCurrentlyPlaying(null)}
+				title="STOP"
+			/>
+		</View>
+	)
 }
 
 export default Transport
