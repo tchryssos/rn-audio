@@ -29,6 +29,7 @@ module.exports = {
   ],
   rules: {
     'prettier/prettier': 0,
+    'no-tabs': 0,
     indent: [
         "error",
         "tab"
@@ -44,6 +45,7 @@ module.exports = {
     semi: [
         "error",
         "never"
-    ]
+    ],
+    'react/jsx-indent': [2, 'tab']
   }
 }
