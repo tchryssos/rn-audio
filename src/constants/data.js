@@ -4,30 +4,35 @@ import Kiss from 'static/kiss.mp3'
 import Undertale from 'static/undertale.mp3'
 import Wii from 'static/wii.mp3'
 
-export default {
-	angel: {
+export default [
+	{
+		id: '1',
 		audio: Angel,
 		title: 'Cruel Angel\'s Thesis',
 		artist: 'Neon Genesis Evangelion',
 	},
-	fZero: {
+	{
+		id: '2',
 		audio: FZero,
 		title: 'Big Blue',
 		artist: 'F-Zero',
 	},
-	kiss: {
+	{
+		id: '3',
 		audio: Kiss,
 		title: 'Kiss of Death',
 		artist: 'Darling in the Franxx',
 	},
-	undertale: {
+	{
+		id: '4',
 		audio: Undertale,
 		title: 'Megalovania',
 		artist: 'Toby Fox',
 	},
-	wii: {
+	{
+		id: '5',
 		audio: Wii,
 		title: 'Wii Shop Channel',
 		artist: 'Iwata',
 	},
-}
+]
