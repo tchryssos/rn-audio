@@ -1,3 +1,6 @@
+const path = require('path')
+const projPath = path.resolve(__dirname, './')
+
 module.exports = {
   env: {
     "browser": true,
@@ -27,6 +30,18 @@ module.exports = {
     "react",
     "react-native",
   ],
+  settings: {
+    "import/resolver": {
+      "babel-module": {
+        alias: {
+          components: path.resolve(projPath, 'src/components'),
+          constants: path.resolve(projPath, 'src/constants'),
+          static: path.resolve(projPath, 'src/static'),
+          logic: path.resolve(projPath, 'src/logic'),
+        },
+      },
+    },
+  },
   rules: {
     'prettier/prettier': 0,
     'no-tabs': 0,
