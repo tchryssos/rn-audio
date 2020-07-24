@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { StyleSheet, TouchableOpacity, Text, } from 'react-native'
+
+import AudioContext from 'logic/contexts/audio'
 
 const styles = StyleSheet.create({
 	item: {
@@ -12,8 +14,9 @@ const styles = StyleSheet.create({
 	},
 })
 
-const AudioListItem = ({ item: { title, artist, audio } }) => {
-	const onPress = () => {}
+const AudioListItem = ({ item: { id, title, artist } }) => {
+	const { setCurrentlyPlaying } = useContext(AudioContext)
+	const onPress = () => setCurrentlyPlaying(id)
 	return (
 		<TouchableOpacity
 			style={styles.item}

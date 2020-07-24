@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
 	list: {
 		padding: 8,
 		paddingBottom: 0,
+		width: '100%',
 	},
 })
 
@@ -15,7 +16,7 @@ const AudioList = () => (
 	<FlatList
 		style={styles.list}
 		data={data}
-		renderItem={AudioListItem}
+		ListItemComponent={AudioListItem}
 		keyExtractor={(item) => item.id}
 	/>
 )
