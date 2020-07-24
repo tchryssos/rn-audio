@@ -5,7 +5,7 @@ import { Text } from 'react-native-elements'
 import AudioContext from 'logic/contexts/audio'
 
 import AudioList from 'components/AudioList'
-import Player from 'components/Player'
+import Transport from 'components/Transport'
 
 const styles = StyleSheet.create({
 	app: {
@@ -23,7 +23,7 @@ const App = () => {
 			<View style={styles.app}>
 				<Text h1>Audio</Text>
 				<AudioList />
-				<Player />
+				<Transport />
 			</View>
 		</AudioContext.Provider>
 	)

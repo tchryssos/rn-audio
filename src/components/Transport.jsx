@@ -1,6 +1,7 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Slider, Icon, Text } from 'react-native-elements'
+import { Player } from '@react-native-community/audio-toolkit'
 
 import AudioContext from 'logic/contexts/audio'
 import { store } from 'constants/data'
@@ -15,9 +16,20 @@ const styles = StyleSheet.create({
 	},
 })
 
-const Player = () => {
+const Transport = () => {
 	const { currentlyPlaying } = useContext(AudioContext)
 	const currTrack = store[currentlyPlaying]
+	const audioPlayerRef = useRef()
+
+	useEffect(() => {
+		audioPlayerRef.current?.destroy()
+		if (currTrack) {
+			audioPlayerRef.current = new Player('wii.mp3')
+			audioPlayerRef.current.play()
+		}
+		return () => audioPlayerRef.current?.destroy()
+	}, [currTrack])
+
 	if (currTrack) {
 		const { title } = currTrack
 		return (
@@ -29,4 +41,4 @@ const Player = () => {
 	return null
 }
 
-export default Player
+export default Transport
