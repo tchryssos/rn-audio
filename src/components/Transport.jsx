@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Slider, Icon, Text } from 'react-native-elements'
 import { Player } from '@react-native-community/audio-toolkit'
@@ -23,13 +23,9 @@ const styles = StyleSheet.create({
 })
 
 const Transport = () => {
-	const [title, setTitle] = useState('')
-	const [artist, setArtist] = useState('')
-	const [duration, setDuration] = useState(0)
 	const { currentlyPlaying } = useContext(AudioContext)
 	const currTrack = store[currentlyPlaying]
 	const audioPlayerRef = useRef()
-	const currentTimeRef = useRef()
 
 	useEffect(() => {
 		audioPlayerRef.current?.destroy()
@@ -39,24 +35,21 @@ const Transport = () => {
 				mixWithOthers: true,
 			})
 			audioPlayerRef.current.play()
-			setTitle(currTrack.title)
-			setArtist(currTrack.artist)
-			setDuration(audioPlayerRef.current.duration)
 		}
 		return () => audioPlayerRef.current?.destroy()
 	}, [currTrack])
 
-	useEffect(() => {
-		currentTimeRef.current = audioPlayerRef.current?.currentTime
-	}, [audioPlayerRef.current?.currentTime])
-
-	return (
-		<View style={styles.player}>
-			<Text h4>{title}</Text>
-			<Text>{artist}</Text>
-			<Text>{secondsToTime(Math.floor(duration / 1000))}</Text>
-		</View>
-	)
+	if (currTrack) {
+		const { title, artist } = currTrack
+		return (
+			<View style={styles.player}>
+				<Text h4>{title}</Text>
+				<Text>{artist}</Text>
+				{/* <Text>{secondsToTime(Math.floor(duration / 1000))}</Text> */}
+			</View>
+		)
+	}
+	return null
 }
 
 export default Transport
