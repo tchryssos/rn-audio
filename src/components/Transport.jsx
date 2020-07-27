@@ -161,6 +161,10 @@ const Transport = () => {
 					pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
 				),
 			})
+			MusicControl.updatePlayback({
+				state: MusicControl.STATE_PLAYING,
+				elapsedTime: 0,
+			})
 		}
 		return () => audioPlayerRef.current?.destroy()
 	}, [audio])
