@@ -28,8 +28,6 @@ const styles = StyleSheet.create({
 		padding: 8,
 		paddingTop: 0,
 	},
-	thumb: {
-	},
 	controlsRow: {
 		display: 'flex',
 		justifyContent: 'space-between',
@@ -74,7 +72,7 @@ const Transport = () => {
 	const [trackDuration, setTrackDuration] = useState()
 	const elapsedTime = trackDuration * (trackProgress / 100)
 	const {
-		title, artist, id, audio,
+		title, artist, audio,
 	} = propOr({}, currentlyPlaying, store)
 	const audioPlayerRef = useRef()
 	// END - STATE & REFS - END
@@ -85,6 +83,7 @@ const Transport = () => {
 		setCurrentlyPlaying(null)
 		setTrackPlaying(false)
 		setTrackDuration(null)
+		setTrackProgress(0)
 	}
 
 	const onPause = () => {
@@ -139,15 +138,15 @@ const Transport = () => {
 	// END - EFFECTS - END
 
 	const timeString = trackDuration ? `${secondsToTime(
-		Math.floor(trackDuration * (trackProgress / 100)),
+		Math.floor(trackDuration * trackProgress),
 	)}/${secondsToTime(trackDuration)}` : ''
 
 	return (
 		<View style={styles.player}>
 			<Slider
-				value={trackProgress / 100}
-				// thumbStyle={styles.thumb}
+				value={trackProgress}
 				thumbTintColor="transparent"
+				minimumTrackTintColor={trackProgress ? '#3f3f3f' : 'transparent'}
 				disabled
 			/>
 			<Text h4>{title}</Text>

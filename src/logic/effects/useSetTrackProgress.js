@@ -16,7 +16,7 @@ export default (
 					clamp(
 						0, 100,
 						trackProgressPerc,
-					),
+					) / 100,
 				)
 			})
 		}
