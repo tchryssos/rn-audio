@@ -137,9 +137,9 @@ const Transport = () => {
 	}, [])
 
 	useEffect(() => { // Set up lockscreen audio control methods
-		MusicControl.on('pause', () => onPause())
-		MusicControl.on('play', () => onPlay())
-	})
+		MusicControl.on('pause', onPause)
+		MusicControl.on('play', onPlay)
+	}, [trackPlaying, currentlyPlaying, onPause, onPlay])
 
 	useEffect(() => { // On changing audio file, setup player
 		audioPlayerRef.current?.destroy()
