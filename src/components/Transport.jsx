@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
 		width: '100%',
 		padding: 8,
 		paddingTop: 0,
-		borderColor: 'black',
-		borderTopWidth: 1,
+	},
+	thumb: {
 	},
 	controlsRow: {
 		display: 'flex',
@@ -144,6 +144,12 @@ const Transport = () => {
 
 	return (
 		<View style={styles.player}>
+			<Slider
+				value={trackProgress / 100}
+				// thumbStyle={styles.thumb}
+				thumbTintColor="transparent"
+				disabled
+			/>
 			<Text h4>{title}</Text>
 			<View style={styles.controlsRow}>
 				<View>
