@@ -18,8 +18,19 @@ const styles = StyleSheet.create({
 
 const App = () => {
 	const [currentlyPlaying, setCurrentlyPlaying] = useState(null)
+	const [queue, setQueue] = useState([])
+	const [queuePosition, setQueuePosition] = useState(null)
 	return (
-		<AudioContext.Provider value={{ currentlyPlaying, setCurrentlyPlaying }}>
+		<AudioContext.Provider
+			value={{
+				currentlyPlaying,
+				setCurrentlyPlaying,
+				queue,
+				setQueue,
+				queuePosition,
+				setQueuePosition,
+			}}
+		>
 			<View style={styles.app}>
 				<Text h1>Audio</Text>
 				<AudioList />

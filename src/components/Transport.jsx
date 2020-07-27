@@ -51,10 +51,11 @@ const styles = StyleSheet.create({
 	},
 })
 
-const TransportIcon = ({ name, onPress, onLongPress }) => (
+const TransportIcon = ({ name, onPress, onLongPress, disabled }) => (
 	<Pressable
 		onPress={onPress}
 		onLongPress={onLongPress}
+		disabled={disabled}
 	>
 		<Icon name={name} style={styles.icon} />
 	</Pressable>
@@ -76,20 +77,23 @@ const Transport = () => {
 
 	// START - FUNC DEFS - START
 	const onStop = () => {
+		audioPlayerRef.current?.destroy()
 		setCurrentlyPlaying(null)
 		setTrackPlaying(false)
 		setTrackDuration(null)
 	}
 
 	const onPause = () => {
-		setTrackPlaying(false)
 		audioPlayerRef.current?.pause()
+		setTrackPlaying(false)
 	}
 
 	const onPlay = () => {
-		setTrackPlaying(true)
-		setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
-		audioPlayerRef.current?.play()
+		if (currentlyPlaying) {
+			audioPlayerRef.current?.play()
+			setTrackPlaying(true)
+			setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
+		}
 	}
 	// END - FUNC DEFS - END
 
@@ -141,10 +145,12 @@ const Transport = () => {
 						<TransportIcon
 							name="pause"
 							onPress={onPause}
+							onLongPress={onStop}
 						/>,
 						<TransportIcon
 							name="play-arrow"
 							onPress={onPlay}
+							disabled={!currentlyPlaying}
 						/>,
 					)}
 					<TransportIcon
@@ -152,11 +158,11 @@ const Transport = () => {
 					/>
 				</View>
 			</View>
-			<Button
+			{/* <Button
 				onPress={onStop}
 				title="STOP"
 				disabled={!currentlyPlaying}
-			/>
+			/> */}
 		</View>
 	)
 }
