@@ -1,7 +1,7 @@
 import React, {
 	useContext, useEffect, useRef, useState,
 } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, Pressable, StyleSheet } from 'react-native'
 import {
 	Slider, Icon, Text, Button,
 } from 'react-native-elements'
@@ -46,9 +46,19 @@ const styles = StyleSheet.create({
 		width: 48,
 		display: 'flex',
 		alignItems: 'center',
+		justifyContent: 'center',
 		flexDirection: 'row',
 	},
 })
+
+const TransportIcon = ({ name, onPress, onLongPress }) => (
+	<Pressable
+		onPress={onPress}
+		onLongPress={onLongPress}
+	>
+		<Icon name={name} style={styles.icon} />
+	</Pressable>
+)
 
 const Transport = () => {
 	// START - STATE & REFS - START
@@ -57,6 +67,7 @@ const Transport = () => {
 	const [trackStartTime, setTrackStartTime] = useState()
 	const [trackPlaying, setTrackPlaying] = useState()
 	const [trackDuration, setTrackDuration] = useState()
+	const elapsedTime = trackDuration * (trackProgress / 100)
 	const {
 		title, artist, id, audio,
 	} = propOr({}, currentlyPlaying, store)
@@ -68,8 +79,19 @@ const Transport = () => {
 		setCurrentlyPlaying(null)
 		setTrackPlaying(false)
 		setTrackDuration(null)
-		// END - FUNC DEFS - END
 	}
+
+	const onPause = () => {
+		setTrackPlaying(false)
+		audioPlayerRef.current?.pause()
+	}
+
+	const onPlay = () => {
+		setTrackPlaying(true)
+		setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
+		audioPlayerRef.current?.play()
+	}
+	// END - FUNC DEFS - END
 
 	// START - EFFECTS - START
 	useEffect(() => {
@@ -111,13 +133,23 @@ const Transport = () => {
 					<Text>{timeString}</Text>
 				</View>
 				<View style={styles.controlsWrapper}>
-					<Icon name="skip-previous" style={styles.icon} />
+					<TransportIcon
+						name="skip-previous"
+					/>
 					{ternary(
-						currentlyPlaying,
-						<Icon name="pause" style={styles.icon} />,
-						<Icon name="play-arrow" style={styles.icon} />,
+						trackPlaying,
+						<TransportIcon
+							name="pause"
+							onPress={onPause}
+						/>,
+						<TransportIcon
+							name="play-arrow"
+							onPress={onPlay}
+						/>,
 					)}
-					<Icon name="skip-next" style={styles.icon} />
+					<TransportIcon
+						name="skip-next"
+					/>
 				</View>
 			</View>
 			<Button
