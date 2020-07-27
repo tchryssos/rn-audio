@@ -8,6 +8,8 @@ import {
 import { Player } from '@react-native-community/audio-toolkit'
 import propOr from 'ramda/src/propOr'
 import pathOr from 'ramda/src/pathOr'
+import path from 'ramda/src/path'
+import length from 'ramda/src/length'
 
 import AudioContext from 'logic/contexts/audio'
 import { store } from 'constants/data'
@@ -63,7 +65,9 @@ const TransportIcon = ({ name, onPress, onLongPress, disabled }) => (
 
 const Transport = () => {
 	// START - STATE & REFS - START
-	const { currentlyPlaying, setCurrentlyPlaying } = useContext(AudioContext)
+	const {
+		currentlyPlaying, setCurrentlyPlaying, queue, setQueuePosition, queuePosition,
+	} = useContext(AudioContext)
 	const [trackProgress, setTrackProgress] = useState(0)
 	const [trackStartTime, setTrackStartTime] = useState()
 	const [trackPlaying, setTrackPlaying] = useState()
@@ -94,6 +98,16 @@ const Transport = () => {
 			setTrackPlaying(true)
 			setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
 		}
+	}
+
+	const onNext = () => {
+		setCurrentlyPlaying(path([queuePosition + 1, 'id'], queue))
+		setQueuePosition(queuePosition + 1)
+	}
+
+	const onPrev = () => {
+		setCurrentlyPlaying(path([queuePosition - 1, 'id'], queue))
+		setQueuePosition(queuePosition - 1)
 	}
 	// END - FUNC DEFS - END
 
@@ -139,6 +153,8 @@ const Transport = () => {
 				<View style={styles.controlsWrapper}>
 					<TransportIcon
 						name="skip-previous"
+						onPress={onPrev}
+						disabled={!queuePosition}
 					/>
 					{ternary(
 						trackPlaying,
@@ -146,6 +162,7 @@ const Transport = () => {
 							name="pause"
 							onPress={onPause}
 							onLongPress={onStop}
+							disabled={!currentlyPlaying}
 						/>,
 						<TransportIcon
 							name="play-arrow"
@@ -155,14 +172,11 @@ const Transport = () => {
 					)}
 					<TransportIcon
 						name="skip-next"
+						onPress={onNext}
+						disabled={!currentlyPlaying || queuePosition === length(queue) - 1}
 					/>
 				</View>
 			</View>
-			{/* <Button
-				onPress={onStop}
-				title="STOP"
-				disabled={!currentlyPlaying}
-			/> */}
 		</View>
 	)
 }

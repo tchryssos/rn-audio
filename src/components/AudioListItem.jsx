@@ -14,9 +14,12 @@ const styles = StyleSheet.create({
 	},
 })
 
-const AudioListItem = ({ item: { id, title, artist } }) => {
-	const { setCurrentlyPlaying } = useContext(AudioContext)
-	const onPress = () => setCurrentlyPlaying(id)
+const AudioListItem = ({ item: { id, title, artist }, index }) => {
+	const { setCurrentlyPlaying, setQueuePosition } = useContext(AudioContext)
+	const onPress = () => {
+		setCurrentlyPlaying(id)
+		setQueuePosition(index)
+	}
 	return (
 		<TouchableOpacity
 			style={styles.item}
