@@ -12,6 +12,7 @@ import pathOr from 'ramda/src/pathOr'
 import AudioContext from 'logic/contexts/audio'
 import { store } from 'constants/data'
 import secondsToTime from 'logic/utils/secondsToTime'
+import ternary from 'logic/utils/ternary'
 import useSetTrackProgress from 'logic/effects/useSetTrackProgress'
 
 const styles = StyleSheet.create({
@@ -26,6 +27,26 @@ const styles = StyleSheet.create({
 		paddingTop: 0,
 		borderColor: 'black',
 		borderTopWidth: 1,
+	},
+	controlsRow: {
+		display: 'flex',
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+		alignItems: 'center',
+		marginTop: -8,
+	},
+	controlsWrapper: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+	},
+	icon: {
+		height: 48,
+		width: 48,
+		display: 'flex',
+		alignItems: 'center',
+		flexDirection: 'row',
 	},
 })
 
@@ -46,6 +67,7 @@ const Transport = () => {
 	const onStop = () => {
 		setCurrentlyPlaying(null)
 		setTrackPlaying(false)
+		setTrackDuration(null)
 		// END - FUNC DEFS - END
 	}
 
@@ -82,9 +104,22 @@ const Transport = () => {
 
 	return (
 		<View style={styles.player}>
-			<Text h4>{artist}</Text>
-			<Text>{title}</Text>
-			<Text>{timeString}</Text>
+			<Text h4>{title}</Text>
+			<View style={styles.controlsRow}>
+				<View>
+					<Text>{artist}</Text>
+					<Text>{timeString}</Text>
+				</View>
+				<View style={styles.controlsWrapper}>
+					<Icon name="skip-previous" style={styles.icon} />
+					{ternary(
+						currentlyPlaying,
+						<Icon name="pause" style={styles.icon} />,
+						<Icon name="play-arrow" style={styles.icon} />,
+					)}
+					<Icon name="skip-next" style={styles.icon} />
+				</View>
+			</View>
 			<Button
 				onPress={onStop}
 				title="STOP"
