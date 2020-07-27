@@ -1,5 +1,7 @@
 import React, { useContext } from 'react'
-import { StyleSheet, TouchableOpacity, Text, } from 'react-native'
+import {
+	StyleSheet, TouchableOpacity, Text, Image, View,
+} from 'react-native'
 
 import AudioContext from 'logic/contexts/audio'
 
@@ -11,10 +13,18 @@ const styles = StyleSheet.create({
 		borderRadius: 4,
 		marginBottom: 8,
 		padding: 4,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	image: {
+		height: 60,
+		width: 60,
+		marginRight: 12,
 	},
 })
 
-const AudioListItem = ({ item: { id, title, artist }, index }) => {
+const AudioListItem = ({ item: { id, title, artist, image }, index }) => {
 	const { setCurrentlyPlaying, setQueuePosition } = useContext(AudioContext)
 	const onPress = () => {
 		setCurrentlyPlaying(id)
@@ -25,15 +35,21 @@ const AudioListItem = ({ item: { id, title, artist }, index }) => {
 			style={styles.item}
 			onPress={onPress}
 		>
-			<Text>
-				&quot;
-				{title}
-				&quot;
-			</Text>
-			<Text>
-				by&nbsp;
-				{artist}
-			</Text>
+			<Image
+				source={image}
+				style={styles.image}
+			/>
+			<View>
+				<Text>
+					&quot;
+					{title}
+					&quot;
+				</Text>
+				<Text>
+					by&nbsp;
+					{artist}
+				</Text>
+			</View>
 		</TouchableOpacity>
 	)
 }

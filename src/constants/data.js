@@ -1,14 +1,15 @@
-// import AngelMp3 from 'static/angel.mp3'
-// import FZeroMp3 from 'static/fzero.mp3'
-// import KissMp3 from 'static/kiss.mp3'
-// import UndertaleMp3 from 'static/undertale.mp3'
-// import WiiMp3 from 'static/wii.mp3'
+import angelImg from 'static/angel.jpg'
+import fZeroImg from 'static/fzero.png'
+import kissImg from 'static/kiss.jpg'
+import undertaleImg from 'static/undertale.jpg'
+import wiiImg from 'static/wii.jpg'
 
 const angel = {
 	id: '1',
 	audio: 'angel.mp3',
 	title: 'Cruel Angel\'s Thesis',
 	artist: 'Neon Genesis Evangelion',
+	image: angelImg,
 }
 
 const fZero = {
@@ -16,6 +17,7 @@ const fZero = {
 	audio: 'fzero.mp3',
 	title: 'Big Blue',
 	artist: 'F-Zero',
+	image: fZeroImg,
 }
 
 const kiss = 	{
@@ -23,6 +25,7 @@ const kiss = 	{
 	audio: 'kiss.mp3',
 	title: 'Kiss of Death',
 	artist: 'Darling in the Franxx',
+	image: kissImg,
 }
 
 const undertale = 	{
@@ -30,6 +33,7 @@ const undertale = 	{
 	audio: 'undertale.mp3',
 	title: 'Megalovania',
 	artist: 'Toby Fox',
+	image: undertaleImg,
 }
 
 const wii = {
@@ -37,6 +41,7 @@ const wii = {
 	audio: 'wii.mp3',
 	title: 'Wii Shop Channel',
 	artist: 'Iwata',
+	image: wiiImg,
 }
 
 export const store = {
