@@ -184,6 +184,7 @@ const Transport = () => {
 				duration: Math.floor(
 					pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
 				),
+				artwork: image,
 			})
 			MusicControl.updatePlayback({
 				state: MusicControl.STATE_PLAYING,
