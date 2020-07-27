@@ -1,11 +1,13 @@
+/* eslint-disable no-unused-expressions */
 import React, {
 	useContext, useEffect, useRef, useState,
 } from 'react'
 import { View, Pressable, StyleSheet } from 'react-native'
 import {
-	Slider, Icon, Text, Button,
+	Slider, Icon, Text,
 } from 'react-native-elements'
 import { Player } from '@react-native-community/audio-toolkit'
+import MusicControl from 'react-native-music-control'
 import propOr from 'ramda/src/propOr'
 import pathOr from 'ramda/src/pathOr'
 import path from 'ramda/src/path'
@@ -51,7 +53,9 @@ const styles = StyleSheet.create({
 	},
 })
 
-const TransportIcon = ({ name, onPress, onLongPress, disabled }) => (
+const TransportIcon = ({
+	name, onPress, onLongPress, disabled,
+}) => (
 	<Pressable
 		onPress={onPress}
 		onLongPress={onLongPress}
@@ -89,6 +93,10 @@ const Transport = () => {
 	const onPause = () => {
 		audioPlayerRef.current?.pause()
 		setTrackPlaying(false)
+		MusicControl.updatePlayback({
+			state: MusicControl.STATE_PAUSED,
+			elapsedTime,
+		})
 	}
 
 	const onPlay = () => {
@@ -96,6 +104,10 @@ const Transport = () => {
 			audioPlayerRef.current?.play()
 			setTrackPlaying(true)
 			setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
+			MusicControl.updatePlayback({
+				state: MusicControl.STATE_PLAYING,
+				elapsedTime,
+			})
 		}
 	}
 
@@ -118,11 +130,22 @@ const Transport = () => {
 
 	// START - EFFECTS - START
 	useEffect(() => {
+		MusicControl.enableControl('play', true)
+		MusicControl.enableControl('pause', true)
+		MusicControl.enableControl('nextTrack', true)
+		MusicControl.enableControl('previousTrack', true)
+	}, [])
+
+	useEffect(() => {
 		audioPlayerRef.current?.destroy()
 		if (audio) {
 			audioPlayerRef.current = new Player(audio, {
 				continuesToPlayInBackground: true,
 			})
+			// const duration = Math.floor(
+			// 	pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
+			// )
+			// console.log(duration)
 			audioPlayerRef.current.play(() => {
 				setTrackPlaying(pathOr(0, ['current', 'state'], audioPlayerRef) === 4)
 				setTrackDuration(Math.floor(
@@ -131,6 +154,13 @@ const Transport = () => {
 				setTrackStartTime(Date.now())
 			})
 			audioPlayerRef.current.on('ended', () => onNext())
+			MusicControl.setNowPlaying({
+				title,
+				artist,
+				duration: Math.floor(
+					pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
+				),
+			})
 		}
 		return () => audioPlayerRef.current?.destroy()
 	}, [audio])

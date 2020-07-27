@@ -5824,6 +5824,11 @@ react-native-elements@^2.0.4:
     react-native-ratings "^7.2.0"
     react-native-status-bar-height "^2.5.0"
 
+react-native-music-control@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/react-native-music-control/-/react-native-music-control-0.12.0.tgz#aa63864f2f056f1e47928eebbc7880e3c00fc88b"
+  integrity sha512-+NK4cFSQ3teciEXutlb1sav7YUgZaYbjnY6uAozA3A+F9F2jAOpDfw1YAko7kzNqpRR35xov3S7Ql3Alq7kJtA==
+
 react-native-ratings@^7.2.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-7.2.0.tgz#8523e98868470855ec1d2feb112e466e17a1fd9f"
