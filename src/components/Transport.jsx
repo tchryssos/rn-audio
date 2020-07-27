@@ -70,7 +70,7 @@ const Transport = () => {
 	const [trackStartTime, setTrackStartTime] = useState()
 	const [trackPlaying, setTrackPlaying] = useState()
 	const [trackDuration, setTrackDuration] = useState()
-	const elapsedTime = trackDuration * (trackProgress / 100)
+	const elapsedTime = trackDuration * trackProgress
 	const {
 		title, artist, audio,
 	} = propOr({}, currentlyPlaying, store)
@@ -100,8 +100,14 @@ const Transport = () => {
 	}
 
 	const onNext = () => {
-		setCurrentlyPlaying(path([queuePosition + 1, 'id'], queue))
-		setQueuePosition(queuePosition + 1)
+		const next = path([queuePosition + 1, 'id'], queue)
+		if (next) {
+			setCurrentlyPlaying(next)
+			setQueuePosition(queuePosition + 1)
+		} else { // if end of list
+			setCurrentlyPlaying(path([0, 'id'], queue))
+			setQueuePosition(0)
+		}
 	}
 
 	const onPrev = () => {
@@ -124,6 +130,7 @@ const Transport = () => {
 				))
 				setTrackStartTime(Date.now())
 			})
+			audioPlayerRef.current.on('ended', () => onNext())
 		}
 		return () => audioPlayerRef.current?.destroy()
 	}, [audio])

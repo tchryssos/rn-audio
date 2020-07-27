@@ -32,7 +32,7 @@ const App = () => {
 			}}
 		>
 			<View style={styles.app}>
-				<Text h1>Audio</Text>
+				<Text h1>Feed</Text>
 				<AudioList />
 				<Transport />
 			</View>
