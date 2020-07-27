@@ -129,23 +129,24 @@ const Transport = () => {
 	// END - FUNC DEFS - END
 
 	// START - EFFECTS - START
-	useEffect(() => {
+	useEffect(() => { // Set up lockscreen audio controls
 		MusicControl.enableControl('play', true)
 		MusicControl.enableControl('pause', true)
 		MusicControl.enableControl('nextTrack', true)
 		MusicControl.enableControl('previousTrack', true)
 	}, [])
 
-	useEffect(() => {
+	useEffect(() => { // Set up lockscreen audio control methods
+		MusicControl.on('pause', () => onPause())
+		MusicControl.on('play', () => onPlay())
+	})
+
+	useEffect(() => { // On changing audio file, setup player
 		audioPlayerRef.current?.destroy()
 		if (audio) {
 			audioPlayerRef.current = new Player(audio, {
 				continuesToPlayInBackground: true,
 			})
-			// const duration = Math.floor(
-			// 	pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
-			// )
-			// console.log(duration)
 			audioPlayerRef.current.play(() => {
 				setTrackPlaying(pathOr(0, ['current', 'state'], audioPlayerRef) === 4)
 				setTrackDuration(Math.floor(
