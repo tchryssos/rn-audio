@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
 	textContentWrapper: {
 		flex: 1,
 	},
+	artistAndTime: {
+		flex: 1,
+	},
 	controlsWrapper: {
 		display: 'flex',
 		flexDirection: 'row',
@@ -214,10 +217,10 @@ const Transport = () => {
 			<View style={styles.metaContent}>
 				<Image source={image} style={styles.image} />
 				<View style={styles.textContentWrapper}>
-					<Text h4>{title}</Text>
+					<Text h4 numberOfLines={1}>{title}</Text>
 					<View style={styles.controlsRow}>
-						<View>
-							<Text>{artist}</Text>
+						<View style={styles.artistAndTime}>
+							<Text numberOfLines={1}>{artist}</Text>
 							<Text>{timeString}</Text>
 						</View>
 						<View style={styles.controlsWrapper}>
