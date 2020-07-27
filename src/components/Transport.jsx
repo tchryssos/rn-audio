@@ -2,7 +2,7 @@
 import React, {
 	useContext, useEffect, useRef, useState, useCallback,
 } from 'react'
-import { View, Pressable, StyleSheet } from 'react-native'
+import { View, Pressable, StyleSheet, Image } from 'react-native'
 import {
 	Slider, Icon, Text,
 } from 'react-native-elements'
@@ -30,12 +30,22 @@ const styles = StyleSheet.create({
 		padding: 8,
 		paddingTop: 0,
 	},
+	metaContent: {
+		display: 'flex',
+		flexDirection: 'row',
+		flex: 1,
+		alignItems: 'center',
+	},
 	controlsRow: {
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 		alignItems: 'center',
 		marginTop: -8,
+		flex: 1,
+	},
+	textContentWrapper: {
+		flex: 1,
 	},
 	controlsWrapper: {
 		display: 'flex',
@@ -50,6 +60,11 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		flexDirection: 'row',
+	},
+	image: {
+		height: 80,
+		width: 80,
+		marginRight: 12,
 	},
 })
 
@@ -76,7 +91,7 @@ const Transport = () => {
 	const [trackDuration, setTrackDuration] = useState()
 	const elapsedTime = trackDuration * trackProgress
 	const {
-		title, artist, audio,
+		title, artist, audio, image,
 	} = propOr({}, currentlyPlaying, store)
 	const audioPlayerRef = useRef()
 	// END - STATE & REFS - END
@@ -196,37 +211,42 @@ const Transport = () => {
 				minimumTrackTintColor={trackProgress ? '#3f3f3f' : 'transparent'}
 				disabled
 			/>
-			<Text h4>{title}</Text>
-			<View style={styles.controlsRow}>
-				<View>
-					<Text>{artist}</Text>
-					<Text>{timeString}</Text>
-				</View>
-				<View style={styles.controlsWrapper}>
-					<TransportIcon
-						name="skip-previous"
-						onPress={onPrev}
-						disabled={!queuePosition}
-					/>
-					{ternary(
-						trackPlaying,
-						<TransportIcon
-							name="pause"
-							onPress={onPause}
-							onLongPress={onStop}
-							disabled={!currentlyPlaying}
-						/>,
-						<TransportIcon
-							name="play-arrow"
-							onPress={onPlay}
-							disabled={!currentlyPlaying}
-						/>,
-					)}
-					<TransportIcon
-						name="skip-next"
-						onPress={onNext}
-						disabled={!currentlyPlaying || queuePosition === length(queue) - 1}
-					/>
+			<View style={styles.metaContent}>
+				<Image source={image} style={styles.image} />
+				<View style={styles.textContentWrapper}>
+					<Text h4>{title}</Text>
+					<View style={styles.controlsRow}>
+						<View>
+							<Text>{artist}</Text>
+							<Text>{timeString}</Text>
+						</View>
+						<View style={styles.controlsWrapper}>
+							<TransportIcon
+								name="skip-previous"
+								onPress={onPrev}
+								disabled={!queuePosition}
+							/>
+							{ternary(
+								trackPlaying,
+								<TransportIcon
+									name="pause"
+									onPress={onPause}
+									onLongPress={onStop}
+									disabled={!currentlyPlaying}
+								/>,
+								<TransportIcon
+									name="play-arrow"
+									onPress={onPlay}
+									disabled={!currentlyPlaying}
+								/>,
+							)}
+							<TransportIcon
+								name="skip-next"
+								onPress={onNext}
+								disabled={!currentlyPlaying || queuePosition === length(queue) - 1}
+							/>
+						</View>
+					</View>
 				</View>
 			</View>
 		</View>
