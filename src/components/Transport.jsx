@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import React, {
-	useContext, useEffect, useRef, useState,
+	useContext, useEffect, useRef, useState, useCallback,
 } from 'react'
 import { View, Pressable, StyleSheet } from 'react-native'
 import {
@@ -81,7 +81,7 @@ const Transport = () => {
 	const audioPlayerRef = useRef()
 	// END - STATE & REFS - END
 
-	// START - FUNC DEFS - START
+	// START - TRANSPORT FUNCS - START
 	const onStop = () => {
 		audioPlayerRef.current?.destroy()
 		setCurrentlyPlaying(null)
@@ -90,16 +90,16 @@ const Transport = () => {
 		setTrackProgress(0)
 	}
 
-	const onPause = () => {
+	const onPause = useCallback(() => {
 		audioPlayerRef.current?.pause()
 		setTrackPlaying(false)
 		MusicControl.updatePlayback({
 			state: MusicControl.STATE_PAUSED,
 			elapsedTime,
 		})
-	}
+	}, [elapsedTime])
 
-	const onPlay = () => {
+	const onPlay = useCallback(() => {
 		if (currentlyPlaying) {
 			audioPlayerRef.current?.play()
 			setTrackPlaying(true)
@@ -109,9 +109,9 @@ const Transport = () => {
 				elapsedTime,
 			})
 		}
-	}
+	}, [elapsedTime, currentlyPlaying])
 
-	const onNext = () => {
+	const onNext = useCallback(() => {
 		const next = path([queuePosition + 1, 'id'], queue)
 		if (next) {
 			setCurrentlyPlaying(next)
@@ -120,13 +120,13 @@ const Transport = () => {
 			setCurrentlyPlaying(path([0, 'id'], queue))
 			setQueuePosition(0)
 		}
-	}
+	}, [queue, queuePosition, setCurrentlyPlaying, setQueuePosition])
 
-	const onPrev = () => {
+	const onPrev = useCallback(() => {
 		setCurrentlyPlaying(path([queuePosition - 1, 'id'], queue))
 		setQueuePosition(queuePosition - 1)
-	}
-	// END - FUNC DEFS - END
+	}, [queuePosition, queue, setCurrentlyPlaying, setQueuePosition])
+	// END - TRANSPORT FUNCS - END
 
 	// START - EFFECTS - START
 	useEffect(() => { // Set up lockscreen audio controls
@@ -139,7 +139,12 @@ const Transport = () => {
 	useEffect(() => { // Set up lockscreen audio control methods
 		MusicControl.on('pause', onPause)
 		MusicControl.on('play', onPlay)
-	}, [trackPlaying, currentlyPlaying, onPause, onPlay])
+		MusicControl.on('nextTrack', onNext)
+		MusicControl.on('previousTrack', onPrev)
+	}, [
+		trackPlaying, currentlyPlaying, onPause, onPlay, onNext,
+		onPrev,
+	])
 
 	useEffect(() => { // On changing audio file, setup player
 		audioPlayerRef.current?.destroy()
