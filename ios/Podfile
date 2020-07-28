@@ -10,6 +10,8 @@ target 'AndroidAudio' do
 
   pod 'ReactNativeAudioToolkit', :path => '../node_modules/@react-native-community/audio-toolkit'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'AndroidAudioTests' do
     inherit! :complete
     # Pods for testing
