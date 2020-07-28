@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet, SafeAreaView } from 'react-native'
 import { Text } from 'react-native-elements'
 
 import AudioContext from 'logic/contexts/audio'
@@ -31,11 +31,11 @@ const App = () => {
 				setQueuePosition,
 			}}
 		>
-			<View style={styles.app}>
+			<SafeAreaView style={styles.app}>
 				<Text h1>Feed</Text>
 				<AudioList />
 				<Transport />
-			</View>
+			</SafeAreaView>
 		</AudioContext.Provider>
 	)
 }

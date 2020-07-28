@@ -148,6 +148,7 @@ const Transport = () => {
 
 	// START - EFFECTS - START
 	useEffect(() => { // Set up lockscreen audio controls
+		MusicControl.enableBackgroundMode(true)
 		MusicControl.enableControl('play', true)
 		MusicControl.enableControl('pause', true)
 		MusicControl.enableControl('nextTrack', true)
