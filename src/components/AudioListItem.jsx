@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 	},
 })
 
-const AudioListItem = ({ item: { id, title, artist, image }, index }) => {
+const AudioListItem = ({ item: { id, title, artist, artwork }, index }) => {
 	const { setCurrentlyPlaying, setQueuePosition } = useContext(AudioContext)
 	const onPress = () => {
 		setCurrentlyPlaying(id)
@@ -36,7 +36,7 @@ const AudioListItem = ({ item: { id, title, artist, image }, index }) => {
 			onPress={onPress}
 		>
 			<Image
-				source={image}
+				source={artwork}
 				style={styles.image}
 			/>
 			<View>

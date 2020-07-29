@@ -17,7 +17,7 @@
     "react-native": "0.63.2",
     "react-native-elements": "^2.0.4",
     "react-native-music-control": "^0.12.0",
-    "react-native-track-player": "^1.2.3",
+    "react-native-track-player": "^2.0.0-rc13",
     "react-native-vector-icons": "^7.0.0"
   },
   "devDependencies": {

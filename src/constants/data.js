@@ -10,6 +10,7 @@ const angel = {
 	title: 'Cruel Angel\'s Thesis',
 	artist: 'Neon Genesis Evangelion',
 	artwork: angelImg,
+	duration: 247,
 }
 
 const fZero = {
@@ -18,6 +19,7 @@ const fZero = {
 	title: 'Big Blue',
 	artist: 'F-Zero',
 	artwork: fZeroImg,
+	duration: 298,
 }
 
 const kiss = 	{
@@ -26,6 +28,7 @@ const kiss = 	{
 	title: 'Kiss of Death',
 	artist: 'Darling in the Franxx',
 	artwork: kissImg,
+	duration: 240,
 }
 
 const undertale = 	{
@@ -34,6 +37,7 @@ const undertale = 	{
 	title: 'Megalovania',
 	artist: 'Toby Fox',
 	artwork: undertaleImg,
+	duration: 336,
 }
 
 const wii = {
@@ -42,6 +46,7 @@ const wii = {
 	title: 'Wii Shop Channel',
 	artist: 'Iwata',
 	artwork: wiiImg,
+	duration: 129.
 }
 
 export const store = {

@@ -2,15 +2,14 @@
 import React, {
 	useContext, useEffect, useRef, useState, useCallback,
 } from 'react'
-import { View, Pressable, StyleSheet, Image } from 'react-native'
+import {
+	View, Pressable, StyleSheet, Image,
+} from 'react-native'
 import {
 	Slider, Icon, Text,
 } from 'react-native-elements'
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { Capability } from 'react-native-track-player'
 import propOr from 'ramda/src/propOr'
-import pathOr from 'ramda/src/pathOr'
-import path from 'ramda/src/path'
-import length from 'ramda/src/length'
 
 import AudioContext from 'logic/contexts/audio'
 import { store } from 'constants/data'
@@ -70,6 +69,22 @@ const styles = StyleSheet.create({
 	},
 })
 
+// Track Player Setup
+const trackPlayerSetup = () => {
+	TrackPlayer.setupPlayer()
+		.then(async () => {
+			await TrackPlayer.updateOptions({
+				capabilities: [
+					Capability.Play,
+					Capability.Pause,
+					Capability.Stop,
+					Capability.SkipToNext,
+					Capability.SkipToPrevious,
+				],
+			})
+		})
+}
+
 const TransportIcon = ({
 	name, onPress, onLongPress, disabled,
 }) => (
@@ -90,11 +105,10 @@ const Transport = () => {
 	const [trackProgress, setTrackProgress] = useState(0)
 	const [trackStartTime, setTrackStartTime] = useState()
 	const [trackPlaying, setTrackPlaying] = useState()
-	const [trackDuration, setTrackDuration] = useState()
-	const elapsedTime = trackDuration * trackProgress
 	const {
-		title, artist, audio, image,
+		title, artist, url, artwork, duration,
 	} = propOr({}, currentlyPlaying, store)
+	const elapsedTime = duration * trackProgress
 	const audioPlayerRef = useRef()
 	// END - STATE & REFS - END
 
@@ -103,102 +117,68 @@ const Transport = () => {
 		audioPlayerRef.current?.destroy()
 		setCurrentlyPlaying(null)
 		setTrackPlaying(false)
-		setTrackDuration(null)
 		setTrackProgress(0)
 	}
 
 	const onPause = useCallback(() => {
-		// audioPlayerRef.current?.pause()
-		// setTrackPlaying(false)
-		// MusicControl.updatePlayback({
-		// 	state: MusicControl.STATE_PAUSED,
-		// 	elapsedTime,
-		// })
-	}, [elapsedTime])
+		TrackPlayer.pause()
+		setTrackPlaying(false)
+	}, [])
 
 	const onPlay = useCallback(() => {
-		// if (currentlyPlaying) {
-		// 	audioPlayerRef.current?.play()
-		// 	setTrackPlaying(true)
-		// 	setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
-		// 	MusicControl.updatePlayback({
-		// 		state: MusicControl.STATE_PLAYING,
-		// 		elapsedTime,
-		// 	})
-		// }
-	}, [elapsedTime, currentlyPlaying])
+		if (currentlyPlaying) {
+			TrackPlayer.play()
+			setTrackPlaying(true)
+			setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
+		}
+	}, [currentlyPlaying, elapsedTime])
 
-	const onNext = useCallback(() => {
-		// const next = path([queuePosition + 1, 'id'], queue)
-		// if (next) {
-		// 	setCurrentlyPlaying(next)
-		// 	setQueuePosition(queuePosition + 1)
-		// } else { // if end of list
-		// 	setCurrentlyPlaying(path([0, 'id'], queue))
-		// 	setQueuePosition(0)
-		// }
-	}, [queue, queuePosition, setCurrentlyPlaying, setQueuePosition])
+	// const onNext = useCallback(() => {
+	// 	// const next = path([queuePosition + 1, 'id'], queue)
+	// 	// if (next) {
+	// 	// 	setCurrentlyPlaying(next)
+	// 	// 	setQueuePosition(queuePosition + 1)
+	// 	// } else { // if end of list
+	// 	// 	setCurrentlyPlaying(path([0, 'id'], queue))
+	// 	// 	setQueuePosition(0)
+	// 	// }
+	// }, [queue, queuePosition, setCurrentlyPlaying, setQueuePosition])
 
-	const onPrev = useCallback(() => {
-		// setCurrentlyPlaying(path([queuePosition - 1, 'id'], queue))
-		// setQueuePosition(queuePosition - 1)
-	}, [queuePosition, queue, setCurrentlyPlaying, setQueuePosition])
+	// const onPrev = useCallback(() => {
+	// 	// setCurrentlyPlaying(path([queuePosition - 1, 'id'], queue))
+	// 	// setQueuePosition(queuePosition - 1)
+	// }, [queuePosition, queue, setCurrentlyPlaying, setQueuePosition])
 	// END - TRANSPORT FUNCS - END
 
 	// START - EFFECTS - START
 	useEffect(() => { // Set up track player
-		TrackPlayer.setupPlayer()
+		trackPlayerSetup()
+		return () => TrackPlayer.destroy()
 	}, [])
 
-	useEffect(() => { // Set up lockscreen audio control methods
-		// MusicControl.on('pause', onPause)
-		// MusicControl.on('play', onPlay)
-		// MusicControl.on('nextTrack', onNext)
-		// MusicControl.on('previousTrack', onPrev)
-	})
+	useEffect(() => {
+		TrackPlayer.add([...queue])
+	}, [queue])
 
-	// useEffect(() => { // On changing audio file, setup player
-	// 	audioPlayerRef.current?.destroy()
-	// 	if (audio) {
-	// 		audioPlayerRef.current = new Player(audio, {
-	// 			continuesToPlayInBackground: true,
-	// 		})
-	// 		audioPlayerRef.current.play(() => {
-	// 			setTrackPlaying(pathOr(0, ['current', 'state'], audioPlayerRef) === 4)
-	// 			setTrackDuration(Math.floor(
-	// 				pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
-	// 			))
-	// 			setTrackStartTime(Date.now())
-	// 		})
-	// 		audioPlayerRef.current.on('ended', () => onNext())
-	// 		MusicControl.setNowPlaying({
-	// 			title,
-	// 			artist,
-	// 			duration: Math.floor(
-	// 				pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
-	// 			),
-	// 			artwork: image,
-	// 		})
-	// 		MusicControl.updatePlayback({
-	// 			state: MusicControl.STATE_PLAYING,
-	// 			elapsedTime: 0,
-	// 		})
-	// 	}
-	// 	return () => audioPlayerRef.current?.destroy()
-	// }, [audio])
+	useEffect(() => {
+		if (currentlyPlaying || currentlyPlaying === 0) {
+			TrackPlayer.skip(currentlyPlaying)
+			onPlay()
+		}
+	}, [currentlyPlaying, onPlay])
 
 	useSetTrackProgress(
 		trackProgress,
-		trackDuration,
+		duration,
 		trackStartTime,
 		setTrackProgress,
 		trackPlaying,
 	)
 	// END - EFFECTS - END
 
-	const timeString = trackDuration ? `${secondsToTime(
-		Math.floor(trackDuration * trackProgress),
-	)}/${secondsToTime(trackDuration)}` : ''
+	const timeString = duration ? `${secondsToTime(
+		Math.floor(duration * trackProgress),
+	)}/${secondsToTime(duration)}` : ''
 
 	return (
 		<View style={styles.player}>
@@ -209,7 +189,7 @@ const Transport = () => {
 				disabled
 			/>
 			<View style={styles.metaContent}>
-				<Image source={image} style={styles.image} />
+				<Image source={artwork} style={styles.image} />
 				<View style={styles.textContentWrapper}>
 					<Text h4 numberOfLines={1}>{title}</Text>
 					<View style={styles.controlsRow}>
@@ -218,11 +198,11 @@ const Transport = () => {
 							<Text>{timeString}</Text>
 						</View>
 						<View style={styles.controlsWrapper}>
-							<TransportIcon
+							{/* <TransportIcon
 								name="skip-previous"
 								onPress={onPrev}
 								disabled={!queuePosition}
-							/>
+							/> */}
 							{ternary(
 								trackPlaying,
 								<TransportIcon
@@ -237,11 +217,11 @@ const Transport = () => {
 									disabled={!currentlyPlaying}
 								/>,
 							)}
-							<TransportIcon
+							{/* <TransportIcon
 								name="skip-next"
 								onPress={onNext}
 								disabled={!currentlyPlaying || queuePosition === length(queue) - 1}
-							/>
+							/> */}
 						</View>
 					</View>
 				</View>
