@@ -163,16 +163,19 @@ const Transport = () => {
 
 	useEffect(() => {
 		TrackPlayer.add([...queue])
+			.then(() => TrackPlayer.play())
+
 	}, [queue])
 
 	useEffect(() => {
 		if (currentlyPlaying || currentlyPlaying === 0) {
-			TrackPlayer.skip(currentlyPlaying)
-			TrackPlayer.play()
-			setTrackPlaying(true)
-			setTrackStartTime(Date.now())
-			getPlayerStatus()
-			getPlayerCurrentlyPlaying()
+			// TrackPlayer.skip(currentlyPlaying)
+			// setTimeout(2000)
+			// TrackPlayer.play()
+			// setTrackPlaying(true)
+			// setTrackStartTime(Date.now())
+			// getPlayerStatus()
+			// getPlayerCurrentlyPlaying()
 		}
 	}, [currentlyPlaying, onPlay])
 
