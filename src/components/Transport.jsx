@@ -13,8 +13,13 @@ import propOr from 'ramda/src/propOr'
 
 import AudioContext from 'logic/contexts/audio'
 import { store } from 'constants/data'
+
 import secondsToTime from 'logic/utils/secondsToTime'
 import ternary from 'logic/utils/ternary'
+import getPlayerStatus from 'logic/utils/trackPlayer/getPlayerStatus'
+import getPlayerQueue from 'logic/utils/trackPlayer/getPlayerQueue'
+import getPlayerCurrentlyPlaying from 'logic/utils/trackPlayer/getPlayerCurrentlyPlaying'
+
 import useSetTrackProgress from 'logic/effects/useSetTrackProgress'
 
 const styles = StyleSheet.create({
@@ -163,7 +168,11 @@ const Transport = () => {
 	useEffect(() => {
 		if (currentlyPlaying || currentlyPlaying === 0) {
 			TrackPlayer.skip(currentlyPlaying)
-			onPlay()
+			TrackPlayer.play()
+			setTrackPlaying(true)
+			setTrackStartTime(Date.now())
+			getPlayerStatus()
+			getPlayerCurrentlyPlaying()
 		}
 	}, [currentlyPlaying, onPlay])
 
