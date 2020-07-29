@@ -6,8 +6,7 @@ import { View, Pressable, StyleSheet, Image } from 'react-native'
 import {
 	Slider, Icon, Text,
 } from 'react-native-elements'
-import { Player } from '@react-native-community/audio-toolkit'
-import MusicControl from 'react-native-music-control'
+import TrackPlayer from 'react-native-track-player'
 import propOr from 'ramda/src/propOr'
 import pathOr from 'ramda/src/pathOr'
 import path from 'ramda/src/path'
@@ -109,91 +108,84 @@ const Transport = () => {
 	}
 
 	const onPause = useCallback(() => {
-		audioPlayerRef.current?.pause()
-		setTrackPlaying(false)
-		MusicControl.updatePlayback({
-			state: MusicControl.STATE_PAUSED,
-			elapsedTime,
-		})
+		// audioPlayerRef.current?.pause()
+		// setTrackPlaying(false)
+		// MusicControl.updatePlayback({
+		// 	state: MusicControl.STATE_PAUSED,
+		// 	elapsedTime,
+		// })
 	}, [elapsedTime])
 
 	const onPlay = useCallback(() => {
-		if (currentlyPlaying) {
-			audioPlayerRef.current?.play()
-			setTrackPlaying(true)
-			setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
-			MusicControl.updatePlayback({
-				state: MusicControl.STATE_PLAYING,
-				elapsedTime,
-			})
-		}
+		// if (currentlyPlaying) {
+		// 	audioPlayerRef.current?.play()
+		// 	setTrackPlaying(true)
+		// 	setTrackStartTime(Date.now() - (Math.round(elapsedTime * 1000)))
+		// 	MusicControl.updatePlayback({
+		// 		state: MusicControl.STATE_PLAYING,
+		// 		elapsedTime,
+		// 	})
+		// }
 	}, [elapsedTime, currentlyPlaying])
 
 	const onNext = useCallback(() => {
-		const next = path([queuePosition + 1, 'id'], queue)
-		if (next) {
-			setCurrentlyPlaying(next)
-			setQueuePosition(queuePosition + 1)
-		} else { // if end of list
-			setCurrentlyPlaying(path([0, 'id'], queue))
-			setQueuePosition(0)
-		}
+		// const next = path([queuePosition + 1, 'id'], queue)
+		// if (next) {
+		// 	setCurrentlyPlaying(next)
+		// 	setQueuePosition(queuePosition + 1)
+		// } else { // if end of list
+		// 	setCurrentlyPlaying(path([0, 'id'], queue))
+		// 	setQueuePosition(0)
+		// }
 	}, [queue, queuePosition, setCurrentlyPlaying, setQueuePosition])
 
 	const onPrev = useCallback(() => {
-		setCurrentlyPlaying(path([queuePosition - 1, 'id'], queue))
-		setQueuePosition(queuePosition - 1)
+		// setCurrentlyPlaying(path([queuePosition - 1, 'id'], queue))
+		// setQueuePosition(queuePosition - 1)
 	}, [queuePosition, queue, setCurrentlyPlaying, setQueuePosition])
 	// END - TRANSPORT FUNCS - END
 
 	// START - EFFECTS - START
-	useEffect(() => { // Set up lockscreen audio controls
-		MusicControl.enableBackgroundMode(true)
-		MusicControl.enableControl('play', true)
-		MusicControl.enableControl('pause', true)
-		MusicControl.enableControl('nextTrack', true)
-		MusicControl.enableControl('previousTrack', true)
+	useEffect(() => { // Set up track player
+		TrackPlayer.setupPlayer()
 	}, [])
 
 	useEffect(() => { // Set up lockscreen audio control methods
-		MusicControl.on('pause', onPause)
-		MusicControl.on('play', onPlay)
-		MusicControl.on('nextTrack', onNext)
-		MusicControl.on('previousTrack', onPrev)
-	}, [
-		trackPlaying, currentlyPlaying, onPause, onPlay, onNext,
-		onPrev,
-	])
+		// MusicControl.on('pause', onPause)
+		// MusicControl.on('play', onPlay)
+		// MusicControl.on('nextTrack', onNext)
+		// MusicControl.on('previousTrack', onPrev)
+	})
 
-	useEffect(() => { // On changing audio file, setup player
-		audioPlayerRef.current?.destroy()
-		if (audio) {
-			audioPlayerRef.current = new Player(audio, {
-				continuesToPlayInBackground: true,
-			})
-			audioPlayerRef.current.play(() => {
-				setTrackPlaying(pathOr(0, ['current', 'state'], audioPlayerRef) === 4)
-				setTrackDuration(Math.floor(
-					pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
-				))
-				setTrackStartTime(Date.now())
-			})
-			audioPlayerRef.current.on('ended', () => onNext())
-			MusicControl.setNowPlaying({
-				title,
-				artist,
-				duration: Math.floor(
-					pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
-				),
-				artwork: image,
-			})
-			MusicControl.updatePlayback({
-				state: MusicControl.STATE_PLAYING,
-				elapsedTime: 0,
-			})
-		}
-		return () => audioPlayerRef.current?.destroy()
-	}, [audio])
+	// useEffect(() => { // On changing audio file, setup player
+	// 	audioPlayerRef.current?.destroy()
+	// 	if (audio) {
+	// 		audioPlayerRef.current = new Player(audio, {
+	// 			continuesToPlayInBackground: true,
+	// 		})
+	// 		audioPlayerRef.current.play(() => {
+	// 			setTrackPlaying(pathOr(0, ['current', 'state'], audioPlayerRef) === 4)
+	// 			setTrackDuration(Math.floor(
+	// 				pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
+	// 			))
+	// 			setTrackStartTime(Date.now())
+	// 		})
+	// 		audioPlayerRef.current.on('ended', () => onNext())
+	// 		MusicControl.setNowPlaying({
+	// 			title,
+	// 			artist,
+	// 			duration: Math.floor(
+	// 				pathOr(0, ['current', 'duration'], audioPlayerRef) / 1000,
+	// 			),
+	// 			artwork: image,
+	// 		})
+	// 		MusicControl.updatePlayback({
+	// 			state: MusicControl.STATE_PLAYING,
+	// 			elapsedTime: 0,
+	// 		})
+	// 	}
+	// 	return () => audioPlayerRef.current?.destroy()
+	// }, [audio])
 
 	useSetTrackProgress(
 		trackProgress,

@@ -6,42 +6,42 @@ import wiiImg from 'static/wii.jpg'
 
 const angel = {
 	id: '1',
-	audio: 'angel.mp3',
+	url: 'angel.mp3',
 	title: 'Cruel Angel\'s Thesis',
 	artist: 'Neon Genesis Evangelion',
-	image: angelImg,
+	artwork: angelImg,
 }
 
 const fZero = {
 	id: '2',
-	audio: 'fzero.mp3',
+	url: 'fzero.mp3',
 	title: 'Big Blue',
 	artist: 'F-Zero',
-	image: fZeroImg,
+	artwork: fZeroImg,
 }
 
 const kiss = 	{
 	id: '3',
-	audio: 'kiss.mp3',
+	url: 'kiss.mp3',
 	title: 'Kiss of Death',
 	artist: 'Darling in the Franxx',
-	image: kissImg,
+	artwork: kissImg,
 }
 
 const undertale = 	{
 	id: '4',
-	audio: 'undertale.mp3',
+	url: 'undertale.mp3',
 	title: 'Megalovania',
 	artist: 'Toby Fox',
-	image: undertaleImg,
+	artwork: undertaleImg,
 }
 
 const wii = {
 	id: '5',
-	audio: 'wii.mp3',
+	url: 'wii.mp3',
 	title: 'Wii Shop Channel',
 	artist: 'Iwata',
-	image: wiiImg,
+	artwork: wiiImg,
 }
 
 export const store = {
