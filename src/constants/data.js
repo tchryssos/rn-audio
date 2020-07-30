@@ -4,9 +4,15 @@ import kissImg from 'static/kiss.jpg'
 import undertaleImg from 'static/undertale.jpg'
 import wiiImg from 'static/wii.jpg'
 
+import localAngel from 'static/angel.mp3'
+import localFzero from 'static/fzero.mp3'
+import localKiss from 'static/kiss.mp3'
+import localUndertale from 'static/undertale.mp3'
+import localWii from 'static/wii.mp3'
+
 const angel = {
 	id: '1',
-	url: 'angel.mp3',
+	url: localAngel,
 	title: 'Cruel Angel\'s Thesis',
 	artist: 'Neon Genesis Evangelion',
 	artwork: angelImg,
@@ -15,7 +21,7 @@ const angel = {
 
 const fZero = {
 	id: '2',
-	url: 'fzero.mp3',
+	url: localFzero,
 	title: 'Big Blue',
 	artist: 'F-Zero',
 	artwork: fZeroImg,
@@ -24,7 +30,7 @@ const fZero = {
 
 const kiss = 	{
 	id: '3',
-	url: 'kiss.mp3',
+	url: localKiss,
 	title: 'Kiss of Death',
 	artist: 'Darling in the Franxx',
 	artwork: kissImg,
@@ -33,7 +39,7 @@ const kiss = 	{
 
 const undertale = 	{
 	id: '4',
-	url: 'undertale.mp3',
+	url: localUndertale,
 	title: 'Megalovania',
 	artist: 'Toby Fox',
 	artwork: undertaleImg,
@@ -42,11 +48,11 @@ const undertale = 	{
 
 const wii = {
 	id: '5',
-	url: 'wii.mp3',
+	url: localWii,
 	title: 'Wii Shop Channel',
 	artist: 'Iwata',
 	artwork: wiiImg,
-	duration: 129.
+	duration: 129,
 }
 
 export const store = {

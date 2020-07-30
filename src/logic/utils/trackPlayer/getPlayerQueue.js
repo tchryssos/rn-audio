@@ -1,7 +1,4 @@
-import TrackPlayer from 'react-native-track-player'
-
-const getPlayerQueue = async () => {
+export default async (TrackPlayer) => {
 	const q = await TrackPlayer.getQueue()
-	console.log('Player queue: ', q)
 	return q
 }

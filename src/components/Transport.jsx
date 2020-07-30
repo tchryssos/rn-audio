@@ -10,6 +10,8 @@ import {
 } from 'react-native-elements'
 import TrackPlayer, { Capability } from 'react-native-track-player'
 import propOr from 'ramda/src/propOr'
+import path from 'ramda/src/path'
+import length from 'ramda/src/length'
 
 import AudioContext from 'logic/contexts/audio'
 import { store } from 'constants/data'
@@ -17,8 +19,9 @@ import { store } from 'constants/data'
 import secondsToTime from 'logic/utils/secondsToTime'
 import ternary from 'logic/utils/ternary'
 import getPlayerStatus from 'logic/utils/trackPlayer/getPlayerStatus'
-import getPlayerQueue from 'logic/utils/trackPlayer/getPlayerQueue'
-import getPlayerCurrentlyPlaying from 'logic/utils/trackPlayer/getPlayerCurrentlyPlaying'
+// import getPlayerQueue from 'logic/utils/trackPlayer/getPlayerQueue'
+import getPlayerCurrentTrack from 'logic/utils/trackPlayer/getPlayerCurrentTrack'
+import addToQueue from 'logic/utils/trackPlayer/addToQueue'
 
 import useSetTrackProgress from 'logic/effects/useSetTrackProgress'
 
@@ -75,19 +78,18 @@ const styles = StyleSheet.create({
 })
 
 // Track Player Setup
-const trackPlayerSetup = () => {
-	TrackPlayer.setupPlayer()
-		.then(async () => {
-			await TrackPlayer.updateOptions({
-				capabilities: [
-					Capability.Play,
-					Capability.Pause,
-					Capability.Stop,
-					Capability.SkipToNext,
-					Capability.SkipToPrevious,
-				],
-			})
-		})
+const trackPlayerSetup = async () => {
+	await TrackPlayer.setupPlayer({})
+	await TrackPlayer.updateOptions({
+		stopWithApp: false,
+		capabilities: [
+			Capability.Play,
+			Capability.Pause,
+			Capability.Stop,
+			Capability.SkipToNext,
+			Capability.SkipToPrevious,
+		],
+	})
 }
 
 const TransportIcon = ({
@@ -138,21 +140,21 @@ const Transport = () => {
 		}
 	}, [currentlyPlaying, elapsedTime])
 
-	// const onNext = useCallback(() => {
-	// 	// const next = path([queuePosition + 1, 'id'], queue)
-	// 	// if (next) {
-	// 	// 	setCurrentlyPlaying(next)
-	// 	// 	setQueuePosition(queuePosition + 1)
-	// 	// } else { // if end of list
-	// 	// 	setCurrentlyPlaying(path([0, 'id'], queue))
-	// 	// 	setQueuePosition(0)
-	// 	// }
-	// }, [queue, queuePosition, setCurrentlyPlaying, setQueuePosition])
+	const onNext = useCallback(() => {
+		const next = path([queuePosition + 1, 'id'], queue)
+		if (next) {
+			setCurrentlyPlaying(next)
+			setQueuePosition(queuePosition + 1)
+		} else { // if end of list
+			setCurrentlyPlaying(path([0, 'id'], queue))
+			setQueuePosition(0)
+		}
+	}, [queue, queuePosition, setCurrentlyPlaying, setQueuePosition])
 
-	// const onPrev = useCallback(() => {
-	// 	// setCurrentlyPlaying(path([queuePosition - 1, 'id'], queue))
-	// 	// setQueuePosition(queuePosition - 1)
-	// }, [queuePosition, queue, setCurrentlyPlaying, setQueuePosition])
+	const onPrev = useCallback(() => {
+		setCurrentlyPlaying(path([queuePosition - 1, 'id'], queue))
+		setQueuePosition(queuePosition - 1)
+	}, [queuePosition, queue, setCurrentlyPlaying, setQueuePosition])
 	// END - TRANSPORT FUNCS - END
 
 	// START - EFFECTS - START
@@ -162,22 +164,23 @@ const Transport = () => {
 	}, [])
 
 	useEffect(() => {
-		TrackPlayer.add([...queue])
-			.then(() => TrackPlayer.play())
-
+		// @TODO this shouldn't always ADD to the queue whenever the queue changes
+		if (queue) {
+			addToQueue(TrackPlayer, queue)
+		}
 	}, [queue])
 
 	useEffect(() => {
-		if (currentlyPlaying || currentlyPlaying === 0) {
-			// TrackPlayer.skip(currentlyPlaying)
-			// setTimeout(2000)
-			// TrackPlayer.play()
-			// setTrackPlaying(true)
-			// setTrackStartTime(Date.now())
-			// getPlayerStatus()
-			// getPlayerCurrentlyPlaying()
+		const onNewPlaying = async () => {
+			if (currentlyPlaying || currentlyPlaying === 0) {
+				await TrackPlayer.skip(currentlyPlaying)
+				await TrackPlayer.play()
+				setTrackStartTime(Date.now())
+				setTrackPlaying(true)
+			}
 		}
-	}, [currentlyPlaying, onPlay])
+		onNewPlaying()
+	}, [currentlyPlaying])
 
 	useSetTrackProgress(
 		trackProgress,
@@ -210,11 +213,11 @@ const Transport = () => {
 							<Text>{timeString}</Text>
 						</View>
 						<View style={styles.controlsWrapper}>
-							{/* <TransportIcon
+							<TransportIcon
 								name="skip-previous"
 								onPress={onPrev}
 								disabled={!queuePosition}
-							/> */}
+							/>
 							{ternary(
 								trackPlaying,
 								<TransportIcon
@@ -229,11 +232,11 @@ const Transport = () => {
 									disabled={!currentlyPlaying}
 								/>,
 							)}
-							{/* <TransportIcon
+							<TransportIcon
 								name="skip-next"
 								onPress={onNext}
 								disabled={!currentlyPlaying || queuePosition === length(queue) - 1}
-							/> */}
+							/>
 						</View>
 					</View>
 				</View>
